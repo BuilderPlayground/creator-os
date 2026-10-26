@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creator OS | Dashboard</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+
+<%
+    const totalValue = deals.reduce((total, deal) => {
+        return total + Number(deal.amount || 0)
+    }, 0)
+
+    const paidValue = deals
+        .filter(deal => deal.paymentStatus === 'Paid')
+        .reduce((total, deal) => {
+            return total + Number(deal.amount || 0)
+        }, 0)
+
+    const stages = [
+        'Inquiry',
+        'Negotiating',
+        'Contracted',
+        'In Progress',
+        'Completed'
+    ]
+
+    const paymentStatuses = [
+        'Not Invoiced',
+        'Invoice Sent',
+        'Pending',
+        'Paid',
+        'Overdue'
+    ]
+%>
+
+<div class="app-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="brand">
+            <span class="brand-mark">✳</span>
+            <span>CREATOR OS</span>
+        </div>
+
+        <div class="sidebar-section">
+            <p class="sidebar-label">WORKSPACE</p>
+
+            <nav class="sidebar-nav">
+                <a href="/profile" class="nav-link active">Overview</a>
+                <a href="#deals" class="nav-link">Brand Deals</a>
+                <a href="#new-deal" class="nav-link">New Opportunity</a>
+            </nav>
+        </div>
+
+        <div class="sidebar-bottom">
+            <p class="sidebar-label">YOUR ACCOUNT</p>
+            <p class="account-email">
+                <%= user.local && user.local.email ? user.local.email : 'Creator' %>
+            </p>
+            <a href="/logout" class="logout-link">Log out →</a>
+        </div>
+
+    </aside>
+
+    <!-- MAIN DASHBOARD -->
+    <main class="main-content">
+
+        <header class="dashboard-header">
+
+            <div>
+                <p class="eyebrow">YOUR CREATOR WORKSPACE</p>
+                <h1>Make moves. Get paid.</h1>
+                <p class="subtitle">
+                    Your opportunities, partnerships, and payments.
+                    All in one place.
+                </p>
+            </div>
+
+            <a href="#new-deal" class="primary-button">
+                + New Deal
+            </a>
+
+        </header>
+
+        <!-- OVERVIEW CARDS -->
+        <section class="stats-grid">
+
+            <div class="stat-card">
+                <p class="stat-label">TOTAL DEALS</p>
+                <h2><%= deals.length %></h2>
+                <p class="stat-description">Opportunities in your workspace</p>
+            </div>
+
+            <div class="stat-card">
+                <p class="stat-label">PIPELINE VALUE</p>
+                <h2>
+                    <%= totalValue.toLocaleString('en-US', {
+                        style: 'currency',
+                        currency: 'USD',
+                        maximumFractionDigits: 0
+                    }) %>
+                </h2>
+                <p class="stat-description">Total value of tracked deals</p>
+            </div>
+
+            <div class="stat-card">
+                <p class="stat-label">PAYMENTS RECEIVED</p>
+                <h2>
+                    <%= paidValue.toLocaleString('en-US', {
+                        style: 'currency',
+                        currency: 'USD',
+                        maximumFractionDigits: 0
+                    }) %>
+                </h2>
+                <p class="stat-description">Deals marked as paid</p>
+            </div>
+
+        </section>
+
+        <!-- BRAND DEALS -->
+        <section id="deals" class="content-section">
+
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">THE PIPELINE</p>
+                    <h2>Brand partnerships</h2>
+                </div>
+
+                <span class="count-label">
+                    <%= deals.length %> <%= deals.length === 1 ? 'deal' : 'deals' %>
+                </span>
+            </div>
+
+            <% if (deals.length === 0) { %>
+
+                <div class="empty-state">
+                    <span class="empty-icon">✳</span>
+                    <h3>Big things start somewhere.</h3>
+                    <p>
+                        Your next opportunity deserves a place to live.
+                        Add your first brand deal to get started.
+                    </p>
+                    <a href="#new-deal" class="primary-button">
+                        Add your first deal
+                    </a>
+                </div>
+
+            <% } else { %>
+
+                <div class="deals-list">
+
+                    <% deals.forEach(function(deal) { %>
+
+                        <article class="deal-card">
+
+                            <div class="deal-top">
+
+                                <div>
+                                    <p class="deal-platform">
+                                        <%= deal.platform || 'Brand Partnership' %>
+                                    </p>
+
+                                    <h3><%= deal.brand %></h3>
+
+                                    <p class="deal-campaign">
+                                        <%= deal.campaign || 'Untitled campaign' %>
+                                    </p>
+                                </div>
+
+                                <div class="deal-value">
+                                    <strong>
+                                        <%= Number(deal.amount || 0).toLocaleString('en-US', {
+                                            style: 'currency',
+                                            currency: 'USD'
+                                        }) %>
+                                    </strong>
+                                </div>
+
+                            </div>
+
+                            <div class="deal-details">
+
+                                <div>
+                                    <span class="detail-label">STAGE</span>
+                                    <span class="detail-value">
+                                        <%= deal.stage %>
+                                    </span>
+                                </div>
+
+                                <div>
+                                    <span class="detail-label">PAYMENT</span>
+                                    <span class="payment-status">
+                                        <%= deal.paymentStatus %>
+                                    </span>
+                                </div>
+
+                                <div>
+                                    <span class="detail-label">DEADLINE</span>
+                                    <span class="detail-value">
+                                        <%= deal.dueDate || 'Not set' %>
+                                    </span>
+                                </div>
+
+                            </div>
+
+                            <% if (deal.notes) { %>
+                                <p class="deal-notes">
+                                    <%= deal.notes %>
+                                </p>
+                            <% } %>
+
+                            <!-- EDIT DEAL -->
+                            <details class="edit-panel">
+
+                                <summary>Edit deal</summary>
+
+                                <form
+                                    action="/deals/<%= deal._id %>/update"
+                                    method="POST"
+                                    class="deal-form"
+                                >
+
+                                    <div class="form-grid">
+
+                                        <label>
+                                            Brand
+                                            <input
+                                                type="text"
+                                                name="brand"
+                                                value="<%= deal.brand %>"
+                                                required>
+                                        </label>
+
+                                        <label>
+                                            Campaign
+                                            <input
+                                                type="text"
+                                                name="campaign"
+                                                value="<%= deal.campaign %>">
+                                        </label>
+
+                                        <label>
+                                            Platform
+                                            <input
+                                                type="text"
+                                                name="platform"
+                                                value="<%= deal.platform %>">
+                                        </label>
+
+                                        <label>
+                                            Deal Value ($)
+                                            <input
+                                                type="number"
+                                                name="amount"
+                                                min="0"
+                                                step="0.01"
+                                                value="<%= deal.amount %>">
+                                        </label>
+
+                                        <label>
+                                            Deal Stage
+                                            <select name="stage">
+                                                <% stages.forEach(function(stage) { %>
+                                                    <option
+                                                        value="<%= stage %>"
+                                                        <%= deal.stage === stage ? 'selected' : '' %>
+                                                    >
+                                                        <%= stage %>
+                                                    </option>
+                                                <% }) %>
+                                            </select>
+                                        </label>
+
+                                        <label>
+                                            Payment Status
+                                            <select name="paymentStatus">
+                                                <% paymentStatuses.forEach(function(status) { %>
+                                                    <option
+                                                        value="<%= status %>"
+                                                        <%= deal.paymentStatus === status ? 'selected' : '' %>
+                                                    >
+                                                        <%= status %>
+                                                    </option>
+                                                <% }) %>
+                                            </select>
+                                        </label>
+
+                                        <label>
+                                            Deadline
+                                            <input
+                                                type="date"
+                                                name="dueDate"
+                                                value="<%= deal.dueDate %>">
+                                        </label>
+
+                                    </div>
+
+                                    <label>
+                                        Notes
+                                        <textarea name="notes" rows="3"><%= deal.notes %></textarea>
+                                    </label>
+
+                                    <button type="submit" class="primary-button">
+                                        Save Changes
+                                    </button>
+
+                                </form>
+
+                            </details>
+
+                            <!-- DELETE DEAL -->
+                            <form
+                                action="/deals/<%= deal._id %>/delete"
+                                method="POST"
+                                onsubmit="return confirm('Are you sure you want to delete this deal?')"
+                            >
+                                <button type="submit" class="delete-button">
+                                    Delete deal
+                                </button>
+                            </form>
+
+                        </article>
+
+                    <% }) %>
+
+                </div>
+
+            <% } %>
+
+        </section>
+
+        <!-- ADD NEW DEAL -->
+        <section id="new-deal" class="content-section new-deal-section">
+
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">WHAT'S NEXT?</p>
+                    <h2>Add an opportunity</h2>
+                    <p class="subtitle">
+                        From first inquiry to final payment, keep every move organized.
+                    </p>
+                </div>
+            </div>
+
+            <form action="/deals" method="POST" class="deal-form">
+
+                <div class="form-grid">
+
+                    <label>
+                        Brand Name *
+                        <input
+                            type="text"
+                            name="brand"
+                            placeholder="e.g. Glossier"
+                            required
+                            maxlength="150">
+                    </label>
+
+                    <label>
+                        Campaign Name
+                        <input
+                            type="text"
+                            name="campaign"
+                            placeholder="e.g. Fall Beauty Campaign"
+                            maxlength="150">
+                    </label>
+
+                    <label>
+                        Platform
+                        <input
+                            type="text"
+                            name="platform"
+                            placeholder="e.g. Instagram, TikTok"
+                            maxlength="150">
+                    </label>
+
+                    <label>
+                        Deal Value ($)
+                        <input
+                            type="number"
+                            name="amount"
+                            min="0"
+                            step="0.01"
+                            placeholder="2500">
+                    </label>
+
+                    <label>
+                        Deal Stage
+                        <select name="stage">
+                            <% stages.forEach(function(stage) { %>
+                                <option value="<%= stage %>">
+                                    <%= stage %>
+                                </option>
+                            <% }) %>
+                        </select>
+                    </label>
+
+                    <label>
+                        Payment Status
+                        <select name="paymentStatus">
+                            <% paymentStatuses.forEach(function(status) { %>
+                                <option value="<%= status %>">
+                                    <%= status %>
+                                </option>
+                            <% }) %>
+                        </select>
+                    </label>
+
+                    <label>
+                        Deadline
+                        <input type="date" name="dueDate">
+                    </label>
+
+                </div>
+
+                <label>
+                    Notes
+                    <textarea
+                        name="notes"
+                        rows="4"
+                        maxlength="2000"
+                        placeholder="Deliverables, next steps, important details..."
+                    ></textarea>
+                </label>
+
+                <button type="submit" class="primary-button">
+                    Save Opportunity →
+                </button>
+
+            </form>
+
+        </section>
+
+        <footer class="dashboard-footer">
+            <p>CREATOR OS — Your work. Your business. Your way.</p>
+        </footer>
+
+    </main>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In | Creator OS</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body class="auth-page">
+
+    <main class="auth-layout">
+
+        <!-- LEFT: LOGIN FORM -->
+        <section class="auth-main">
+
+            <!-- Navigation -->
+            <header class="auth-header">
+                <a href="/" class="auth-brand">
+                    <span class="auth-logo">✳</span>
+                    <span>CREATOR OS</span>
+                </a>
+
+                <a href="/" class="auth-back">← Back to home</a>
+            </header>
+
+            <!-- Login Content -->
+            <div class="auth-content">
+
+                <p class="auth-eyebrow">YOUR CREATOR WORKSPACE</p>
+
+                <h1>
+                    Welcome<br>
+                    back<span class="auth-accent">.</span>
+                </h1>
+
+                <p class="auth-description">
+                    Your opportunities, partnerships, and payments are right where you left them.
+                </p>
+
+                <!-- Authentication Errors -->
+                <% if (message && message.length > 0) { %>
+                    <div class="auth-error" role="alert">
+                        <%= message %>
+                    </div>
+                <% } %>
+
+                <!-- Login Form -->
+                <form action="/login" method="POST" class="auth-form">
+
+                    <div class="auth-field">
+                        <label for="email">Email address</label>
+
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            placeholder="you@example.com"
+                            autocomplete="username"
+                            required>
+                    </div>
+
+                    <div class="auth-field">
+                        <label for="password">Password</label>
+
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="Enter your password"
+                            autocomplete="current-password"
+                            required>
+                    </div>
+
+                    <button type="submit" class="auth-submit">
+                        Sign in to your workspace
+                        <span aria-hidden="true">↗</span>
+                    </button>
+
+                </form>
+
+                <p class="auth-switch">
+                    New to Creator OS?
+                    <a href="/signup">Create your workspace →</a>
+                </p>
+
+            </div>
+
+            <!-- Footer -->
+            <footer class="auth-footer">
+                CREATOR OS — YOUR WORK. YOUR BUSINESS. YOUR WAY.
+            </footer>
+
+        </section>
+
+
+        <!-- RIGHT: BRAND EXPERIENCE -->
+        <aside class="auth-aside">
+
+            <div class="auth-aside-header">
+                <span class="auth-aside-symbol">✳</span>
+                <span>THE BUSINESS SIDE OF CREATING.</span>
+            </div>
+
+            <div class="auth-aside-content">
+
+                <p class="auth-aside-eyebrow">
+                    FROM PITCH TO PAYCHECK.
+                </p>
+
+                <h2>
+                    Create freely.<br>
+                    <span>Operate boldly.</span>
+                </h2>
+
+                <p class="auth-aside-description">
+                    Less time managing the business behind your creativity. More time building what's next.
+                </p>
+
+                <!-- Illustrative Workspace Preview -->
+                <div class="auth-preview">
+
+                    <div class="auth-preview-header">
+                        <span>YOUR WORKSPACE</span>
+                        <span>SAMPLE PREVIEW</span>
+                    </div>
+
+                    <div class="auth-preview-cards">
+
+                        <div class="auth-preview-card lavender">
+                            <span>PIPELINE VALUE</span>
+                            <strong>$18.5K</strong>
+                        </div>
+
+                        <div class="auth-preview-card lime">
+                            <span>PAYMENTS RECEIVED</span>
+                            <strong>$7.5K</strong>
+                        </div>
+
+                    </div>
+
+                    <div class="auth-preview-bottom">
+                        <span>✳</span>
+                        <p>Your next big collaboration starts here.</p>
+                        <span>↗</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="auth-aside-footer">
+                BUILT FOR CREATORS WHO MEAN BUSINESS.
+            </div>
+
+        </aside>
+
+    </main>
+
+</body>
+</html>
