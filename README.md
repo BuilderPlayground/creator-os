@@ -6,6 +6,24 @@ Creator OS is a full-stack web application designed to simplify the business sid
 
 Built around the idea of taking creators **from pitch to paycheck**, Creator OS helps users organize brand partnerships, manage opportunities, monitor deal progress, and track payments all from one workspace.
 
+## Screenshots
+
+### Homepage
+
+![Creator OS Homepage](public/screenshots/homepage.png)
+
+### Sign Up
+
+![Creator OS Sign Up](public/screenshots/signup.png)
+
+### Login
+
+![Creator OS Login](public/screenshots/login.png)
+
+### Dashboard
+
+![Creator OS Dashboard](public/screenshots/dashboard.png)
+
 ## Features
 
 - **User authentication:** Create an account, sign in, and securely log out.
